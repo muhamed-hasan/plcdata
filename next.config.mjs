@@ -2,7 +2,9 @@
 const nextConfig = {
   /* config options here */
   // Enable using CommonJS modules like nodes7
-  serverExternalPackages: ['nodes7']
+  serverExternalPackages: ['nodes7'],
+  // Disable font optimization for Raspberry Pi compatibility
+  optimizeFonts: false
 };
 
 export default nextConfig; 
