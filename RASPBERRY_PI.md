@@ -30,9 +30,14 @@ This guide provides specific instructions for deploying the PLC Data Reader appl
 
 ## Building for Raspberry Pi
 
-The application has been configured with special build settings for Raspberry Pi's limited resources.
+The application has been configured with special build settings for Raspberry Pi's limited resources and ARM architecture compatibility.
 
-1. Use the Raspberry Pi-specific build command:
+1. Install Babel dependencies (required for ARM compatibility):
+   ```bash
+   npm install
+   ```
+
+2. Use the Raspberry Pi-specific build command:
    ```bash
    npm run build:pi
    ```
@@ -40,18 +45,44 @@ The application has been configured with special build settings for Raspberry Pi
    This command:
    - Limits Node.js memory usage to prevent out-of-memory errors
    - Disables font optimization which causes compatibility issues on ARM architecture
+   - Uses Babel instead of SWC compiler which is not compatible with Raspberry Pi's ARM architecture
 
-2. Start the application:
+3. Start the application:
    ```bash
    npm run start:pi
    ```
 
-3. Access the application by opening a browser on the same network and navigating to:
+4. Access the application by opening a browser on the same network and navigating to:
    ```
-   http://<raspberry-pi-ip-address>:3000
+   http://<raspberry-pi-ip-address>:3001
    ```
 
 ## Troubleshooting
+
+### SWC Compiler Issues
+
+If you encounter SWC-related errors like "Failed to load SWC binary for linux/arm":
+
+1. Make sure you have the `.babelrc` file in your project root with the following content:
+   ```json
+   {
+     "presets": ["next/babel"]
+   }
+   ```
+
+2. Ensure the Babel dependencies are installed:
+   ```bash
+   npm install --save-dev @babel/core @babel/preset-env @babel/preset-react @babel/preset-typescript babel-loader
+   ```
+
+3. Verify that the `next.config.mjs` has the SWC compiler disabled:
+   ```javascript
+   swcMinify: false,
+   compiler: {
+     styledComponents: false,
+     hasReactRefresh: false
+   }
+   ```
 
 ### Memory Issues
 
@@ -88,7 +119,7 @@ If the PLC connection fails:
 
 ## Running as a Service
 
-To run the application as a system service that starts automatically:
+To run the application as a system service that starts automatically on port 3001:
 
 1. Create a service file:
    ```bash
