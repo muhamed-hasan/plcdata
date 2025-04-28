@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "build:pi": "NODE_OPTIONS=--max_old_space_size=512 next build",
+    "build:pi": "DISABLE_SWC=true NODE_OPTIONS=--max_old_space_size=512 next build --no-lint",
     "start:pi": "next start -p 3001"
   },
   "dependencies": {

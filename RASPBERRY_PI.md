@@ -66,23 +66,38 @@ If you encounter SWC-related errors like "Failed to load SWC binary for linux/ar
 1. Make sure you have the `.babelrc` file in your project root with the following content:
    ```json
    {
-     "presets": ["next/babel"]
+     "presets": [
+       [
+         "next/babel",
+         {
+           "preset-env": {
+             "targets": {
+               "node": "current"
+             }
+           }
+         }
+       ]
+     ],
+     "plugins": []
    }
    ```
 
-2. Ensure the Babel dependencies are installed:
+2. Ensure you have the `.npmrc` file in your project root:
+   ```
+   legacy-peer-deps=true
+   # Skip downloading platform-specific SWC binaries
+   sharp_binary_host=https://npmmirror.com/mirrors/sharp
+   sharp_libvips_binary_host=https://npmmirror.com/mirrors/sharp-libvips
+   swc_binary_host=https://npmmirror.com/mirrors/node-swc
+   next_swc_binary_host=https://npmmirror.com/mirrors/next-swc-binary
+   ```
+
+3. Try with the environment variables to explicitly disable SWC:
    ```bash
-   npm install --save-dev @babel/core @babel/preset-env @babel/preset-react @babel/preset-typescript babel-loader
+   DISABLE_SWC=true NODE_OPTIONS=--max_old_space_size=512 next build --no-lint
    ```
 
-3. Verify that the `next.config.mjs` has the SWC compiler disabled:
-   ```javascript
-   swcMinify: false,
-   compiler: {
-     styledComponents: false,
-     hasReactRefresh: false
-   }
-   ```
+4. If you're still having issues, see the alternative approaches in the `FALLBACK.md` file.
 
 ### Memory Issues
 

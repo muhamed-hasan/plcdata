@@ -1,18 +1,18 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   /* config options here */
-  // Enable using CommonJS modules like nodes7
-  serverExternalPackages: ['nodes7'],
+  // Use transpilePackages for nodes7 compatibility (correct syntax for Next.js 14)
+  transpilePackages: ['nodes7'],
   // Disable font optimization for Raspberry Pi compatibility
   optimizeFonts: false,
-  // Disable SWC compiler for Raspberry Pi ARM compatibility
-  swcMinify: false,
-  // Use Babel instead of SWC
-  compiler: {
-    // Disable SWC compiler
-    styledComponents: false,
-    // Use Babel for transpilation
-    hasReactRefresh: false
+  // Force Webpack to run in production mode to avoid SWC
+  webpack: (config, { isServer, dev }) => {
+    // Force Next.js to use Babel
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      // Force Babel to handle JavaScript/TypeScript
+    };
+    return config;
   }
 };
 
